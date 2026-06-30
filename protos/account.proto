@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package account;
+
+// Go projelerinde paket import yolları için opsiyonel tanımlama
+option go_package = "./";
+
+// AccountService, Account Service (Server) tarafından implement edilecek
+// ve Transaction Service (Client) tarafından çağrılacaktır.
+service AccountService {
+  // Güncel hesap bakiyesini döner.
+  rpc GetAccountBalance (GetAccountBalanceRequest) returns (GetAccountBalanceResponse);
+
+  // Bakiyeyi atomik (atomic) olarak günceller (+ veya - yönlü).
+  rpc UpdateAccountBalance (UpdateAccountBalanceRequest) returns (UpdateAccountBalanceResponse);
+
+  // Hesabın sistemde var olup olmadığını doğrular.
+  rpc CheckAccountExists (CheckAccountExistsRequest) returns (CheckAccountExistsResponse);
+}
+
+// --- İstek ve Yanıt Mesajları ---
+
+message GetAccountBalanceRequest {
+  string account_id = 1; // Şartnamede UUID veya BIGINT olarak belirtilmiştir
+}
+
+message GetAccountBalanceResponse {
+  string account_id = 1;
+  int64 balance = 2;     // Bakiye kuruş/cent cinsinden tutulduğu için int64 (BIGINT karşılığı)
+  string currency = 3;   // Örn: USD, TRY, EUR
+}
+
+message UpdateAccountBalanceRequest {
+  string account_id = 1;
+  int64 amount = 2;           // Değişecek tutar (Kuruş/Cent cinsinden)
+  string operation_type = 3;  // "deposit", "withdraw" veya "transfer" vb.
+}
+
+message UpdateAccountBalanceResponse {
+  bool success = 1;
+  int64 new_balance = 2;      // Güncelleme sonrası yeni bakiye
+  string error_message = 3;   // Başarısızlık durumunda hata detayı
+}
+
+message CheckAccountExistsRequest {
+  string account_id = 1;
+}
+
+message CheckAccountExistsResponse {
+  bool exists = 1;
+}

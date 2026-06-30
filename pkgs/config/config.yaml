@@ -1,0 +1,41 @@
+database:
+  dsn: "postgres://myuser:mypass@localhost:5432/mydb?sslmode=disable"
+  max_open_conns: 25
+  max_idle_conns: 25
+  conn_max_lifetime: "5m"
+  conn_max_idle_time: "2m"
+
+redis:
+  addr: "localhost:6379"
+  password: "gizli_sifre"
+  db: 0
+  pool_size: 20
+  min_idle_conns: 5
+  dial_timeout: "5s"
+
+rabbitmq:
+  url: "amqp://guest:guest@localhost:5672/"
+  dial_timeout: "5s"
+
+account_service:
+  grpc:
+    port: 50051
+    timeout: "5s"
+  clients:
+    transaction_service_addr: "localhost:50052"
+  queues:
+    deposit_queue: "account-deposit"
+    withdraw_queue: "account-withdraw"
+    transfer_queue: "account-transfer"
+
+transaction_service:
+  grpc:
+    port: 50052
+    timeout: "5s"
+  clients:
+    account_service_addr: "localhost:50051"
+  queues:
+    listen_queues:
+      - "account-deposit"
+      - "account-withdraw"
+      - "account-transfer"

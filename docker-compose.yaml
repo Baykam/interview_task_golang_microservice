@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # 1. VERİ TABANI - POSTGRESQL
   postgres_db:
     image: postgres:15-alpine
     container_name: go_postgres
@@ -20,6 +21,23 @@ services:
       timeout: 5s
       retries: 5
 
+  # 2. VERİ TABANI GÖÇÜ - GOLANG-MIGRATE
+  db_migration:
+    image: migrate/migrate
+    container_name: bank_migration
+    volumes:
+      - ./migration:/migrations
+    command:
+      - -path=/migrations
+      - -database=postgres://myuser:mypass@postgres_db:5432/mydb?sslmode=disable
+      - up
+    networks:
+      - go_network
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+
+  # 3. ÖNBELLEK - REDIS
   redis_cache:
     image: redis:7-alpine
     container_name: go_redis
@@ -36,7 +54,7 @@ services:
       timeout: 3s
       retries: 5
 
-
+  # 4. MESAJ SIRA YÖNETİCİSİ - RABBITMQ
   rabbitmq_broker:
     image: rabbitmq:3-management-alpine
     container_name: go_rabbitmq
@@ -45,7 +63,7 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     ports:
       - "5672:5672"  
-      - "15672:15672"
+      - "15672:15672" 
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
@@ -56,45 +74,47 @@ services:
       timeout: 5s
       retries: 5
 
+  # 5. HESAP SERVİSİ - ACCOUNT SERVICE
   # account_service:
   #   build:
-  #     context: ./account-service # Dockerfile dosyasının bulunduğu klasör yolu
+  #     context: ./account-service
   #     dockerfile: Dockerfile
   #   container_name: account_service
   #   ports:
-  #     - [cite_start]"8080:8080" # REST API (API Gateway / Dış dünyaya açılan kapı) 
-  #     - "50051:50051" # gRPC Sunucu Portu
+  #     - "8080:8080"   # REST API Portu
+  #     - "50051:50051" # gRPC Server Portu
   #   environment:
-  #     - [cite_start]CONFIG_PATH=/app/config.yaml # Şartname gereği YAML konfigürasyonu 
+  #     - CONFIG_PATH=/app/config.yaml
+  #   networks:
+  #     - go_network
   #   depends_on:
   #     postgres_db:
   #       condition: service_healthy
   #     redis_cache:
   #       condition: service_healthy
-  #   networks:
-  #     - go_network
+  #     db_migration:
+  #       condition: service_completed_successfully # Migration başarıyla bittikten sonra çalıştır
 
+  # 6. TRANSAKSİYON SERVİSİ - TRANSACTION SERVICE
   # transaction_service:
   #   build:
-  #     context: ./transaction-service # Dockerfile dosyasının bulunduğu klasör yolu
+  #     context: ./transaction-service
   #     dockerfile: Dockerfile
   #   container_name: transaction_service
   #   environment:
-  #     - [cite_start]CONFIG_PATH=/app/config.yaml [cite: 97]
+  #     - CONFIG_PATH=/app/config.yaml
+  #   networks:
+  #     - go_network
   #   depends_on:
   #     rabbitmq_broker:
   #       condition: service_healthy
   #     account_service:
-  #       [cite_start]condition: service_started # gRPC üzerinden Account Service'e bağlanacağı için [cite: 68, 71]
-  #   networks:
-  #     - go_network
-
+  #       condition: service_started
 
 volumes:
   postgres_data:
   redis_data:
   rabbitmq_data:
-
 
 networks:
   go_network:

@@ -25,7 +25,7 @@ type server struct {
 	rdb         *redis.Client
 	rmq         *rabbitmq.RabbitMQ
 	mux         *http.ServeMux
-	httpHandler accountHandler.Handler
+	httpHandler *accountHandler.Handler
 	grpcClient  accountProto.AccountServiceClient
 	publisher   rabbitmq.Publisher
 }
@@ -67,8 +67,8 @@ func (s *server) Run() error {
 
 	// manage working functions
 	{
-		accountRepo := accountRepository.NewRepository(s.db, s.logger)
-		accountSvc := accountService.NewService(accountRepo, s.rdb, s.rmq)
+		accountRepo := accountRepository.NewRepository(s.db, s.rdb, s.logger)
+		accountSvc := accountService.NewService(accountRepo, s.rdb, s.rmq, s.logger)
 		s.httpHandler = accountHandler.Newhandler(accountSvc, s.grpcClient, s.publisher, s.cfg, s.logger)
 	}
 

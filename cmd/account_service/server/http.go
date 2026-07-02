@@ -3,7 +3,7 @@ package server
 import "net/http"
 
 func (s *server) httpConnect() *http.Server {
-	s.mux.HandleFunc("/api/accounts", s.httpHandler.GetAccount)
+	s.registerRoutes()
 
 	httpServer := &http.Server{
 		Addr:    ":" + s.cfg.AccountService.HttpPort,
@@ -18,4 +18,30 @@ func (s *server) httpConnect() *http.Server {
 	}()
 
 	return httpServer
+}
+
+func (s *server) registerRoutes() {
+
+	apiMux := http.NewServeMux()
+
+	s.accountRoutes(apiMux)
+
+	s.mux.Handle("/api/", http.StripPrefix("/api", apiMux))
+}
+
+func (s *server) accountRoutes(apiMux *http.ServeMux) {
+
+	accountMux := http.NewServeMux()
+
+	accountMux.HandleFunc("POST /api/accounts", s.httpHandler.Account.CreateAccount)
+	accountMux.HandleFunc("GET /api/accounts", s.httpHandler.Account.GetAccountsList)
+	accountMux.HandleFunc("GET /api/accounts/{id}", s.httpHandler.Account.GetAccountById)
+	accountMux.HandleFunc("DELETE /api/accounts/{id}", s.httpHandler.Account.DeleteAccount)
+
+	accountMux.HandleFunc("POST /api/accounts/{id}/deposit", s.httpHandler.Transaction.Deposit)
+	accountMux.HandleFunc("POST /api/accounts/{id}/withdraw", s.httpHandler.Transaction.Withdraw)
+	accountMux.HandleFunc("POST /api/accounts/{id}/transfer", s.httpHandler.Transaction.Transfer)
+	accountMux.HandleFunc("GET /api/accounts/{id}/transactions", s.httpHandler.Transaction.GetTransactionHistory)
+
+	apiMux.Handle("/api/", http.StripPrefix("/api", accountMux))
 }

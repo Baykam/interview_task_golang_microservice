@@ -22,37 +22,21 @@ func main() {
 	logger.Info("Konfigürasyon (config.yaml) başarıyla okundu.")
 
 	// 3. POSTGRESQL BAĞLANTISI (CONNECTION POOL)
-	db, err := sql.NewPostgresDB(sql.Config{
-		DSN:             cfg.Postgres.DSN,
-		MaxOpenConns:    cfg.Postgres.MaxOpenConns,
-		MaxIdleConns:    cfg.Postgres.MaxIdleConns,
-		ConnMaxLifetime: cfg.Postgres.ConnMaxLifetime,
-		ConnMaxIdleTime: cfg.Postgres.ConnMaxIdleTime,
-	})
+	db, err := sql.NewPostgresDB(cfg.Postgres)
 	if err != nil {
 		logger.Fatalf("PostgreSQL bağlantı hatası: %v", err)
 	}
 	logger.Info("PostgreSQL bağlantı havuzu başarıyla oluşturuldu.")
 
 	// 4. REDIS BAĞLANTISI (CLIENT POOL)
-	rdb, err := redis.NewRedisClient(redis.Config{
-		Addr:         cfg.Redis.Addr,
-		Password:     cfg.Redis.Password,
-		DB:           cfg.Redis.DB,
-		PoolSize:     cfg.Redis.PoolSize,
-		MinIdleConns: cfg.Redis.MinIdleConns,
-		DialTimeout:  cfg.Redis.DialTimeout,
-	})
+	rdb, err := redis.NewRedisClient(cfg.Redis)
 	if err != nil {
 		logger.Fatalf("Redis bağlantı hatası: %v", err)
 	}
 	logger.Info("Redis önbellek istemcisi başarıyla bağlandı.")
 
 	// 5. RABBITMQ BAĞLANTISI (CONNECTION & CHANNEL)
-	rmq, err := rabbitmq.NewRabbitMQ(rabbitmq.Config{
-		URL:         cfg.RabbitMQ.URL,
-		DialTimeout: cfg.RabbitMQ.DialTimeout,
-	})
+	rmq, err := rabbitmq.NewRabbitMQ(cfg.RabbitMQ)
 	if err != nil {
 		logger.Fatalf("RabbitMQ bağlantı hatası: %v", err)
 	}

@@ -20,7 +20,6 @@ type Config struct {
 
 // NewPostgresDB, dışarıdan verilen Config nesnesine göre bağlantı havuzunu başlatır.
 func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
-	// 1. Bağlantıyı aç (Sadece nesne oluşturur)
 	db, err := sqlx.Open("postgres", cfg.DSN)
 	if err != nil {
 		return nil, fmt.Errorf("sqlx.Open hatasi: %w", err)
@@ -45,7 +44,7 @@ func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
 	defer cancel()
 
 	if err := db.PingContext(ctx); err != nil {
-		db.Close() // Hata durumunda açılan yapıyı temizle
+		db.Close()
 		return nil, fmt.Errorf("veritabani ping hatasi: %w", err)
 	}
 

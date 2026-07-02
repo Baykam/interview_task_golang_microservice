@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Account Service",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/account_service",
+            "env": {
+                "CONFIG_PATH": "${workspaceFolder}/pkgs/config/config.yaml"
+            }
+        },
+        {
+            "name": "Run Transaction Service",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/transaction_service",
+            "env": {
+                "CONFIG_PATH": "${workspaceFolder}/pkgs/config/config.yaml"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Run All Services (Account + Transaction)",
+            "configurations": [
+                "Run Account Service",
+                "Run Transaction Service"
+            ],
+            "stopAll": true
+        }
+    ]
+}

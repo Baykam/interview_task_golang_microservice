@@ -4,14 +4,15 @@
 // 	protoc        v7.34.1
 // source: account.proto
 
-package __
+package accountProto
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -337,7 +338,7 @@ var File_account_proto protoreflect.FileDescriptor
 
 const file_account_proto_rawDesc = "" +
 	"\n" +
-	"\raccount.proto\x12\aaccount\"9\n" +
+	"\raccount.proto\x12\faccountProto\"9\n" +
 	"\x18GetAccountBalanceRequest\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\"p\n" +
@@ -360,11 +361,11 @@ const file_account_proto_rawDesc = "" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\"4\n" +
 	"\x1aCheckAccountExistsResponse\x12\x16\n" +
-	"\x06exists\x18\x01 \x01(\bR\x06exists2\xb0\x02\n" +
-	"\x0eAccountService\x12Z\n" +
-	"\x11GetAccountBalance\x12!.account.GetAccountBalanceRequest\x1a\".account.GetAccountBalanceResponse\x12c\n" +
-	"\x14UpdateAccountBalance\x12$.account.UpdateAccountBalanceRequest\x1a%.account.UpdateAccountBalanceResponse\x12]\n" +
-	"\x12CheckAccountExists\x12\".account.CheckAccountExistsRequest\x1a#.account.CheckAccountExistsResponseB\x04Z\x02./b\x06proto3"
+	"\x06exists\x18\x01 \x01(\bR\x06exists2\xce\x02\n" +
+	"\x0eAccountService\x12d\n" +
+	"\x11GetAccountBalance\x12&.accountProto.GetAccountBalanceRequest\x1a'.accountProto.GetAccountBalanceResponse\x12m\n" +
+	"\x14UpdateAccountBalance\x12).accountProto.UpdateAccountBalanceRequest\x1a*.accountProto.UpdateAccountBalanceResponse\x12g\n" +
+	"\x12CheckAccountExists\x12'.accountProto.CheckAccountExistsRequest\x1a(.accountProto.CheckAccountExistsResponseB\x04Z\x02./b\x06proto3"
 
 var (
 	file_account_proto_rawDescOnce sync.Once
@@ -380,20 +381,20 @@ func file_account_proto_rawDescGZIP() []byte {
 
 var file_account_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_account_proto_goTypes = []any{
-	(*GetAccountBalanceRequest)(nil),     // 0: account.GetAccountBalanceRequest
-	(*GetAccountBalanceResponse)(nil),    // 1: account.GetAccountBalanceResponse
-	(*UpdateAccountBalanceRequest)(nil),  // 2: account.UpdateAccountBalanceRequest
-	(*UpdateAccountBalanceResponse)(nil), // 3: account.UpdateAccountBalanceResponse
-	(*CheckAccountExistsRequest)(nil),    // 4: account.CheckAccountExistsRequest
-	(*CheckAccountExistsResponse)(nil),   // 5: account.CheckAccountExistsResponse
+	(*GetAccountBalanceRequest)(nil),     // 0: accountProto.GetAccountBalanceRequest
+	(*GetAccountBalanceResponse)(nil),    // 1: accountProto.GetAccountBalanceResponse
+	(*UpdateAccountBalanceRequest)(nil),  // 2: accountProto.UpdateAccountBalanceRequest
+	(*UpdateAccountBalanceResponse)(nil), // 3: accountProto.UpdateAccountBalanceResponse
+	(*CheckAccountExistsRequest)(nil),    // 4: accountProto.CheckAccountExistsRequest
+	(*CheckAccountExistsResponse)(nil),   // 5: accountProto.CheckAccountExistsResponse
 }
 var file_account_proto_depIdxs = []int32{
-	0, // 0: account.AccountService.GetAccountBalance:input_type -> account.GetAccountBalanceRequest
-	2, // 1: account.AccountService.UpdateAccountBalance:input_type -> account.UpdateAccountBalanceRequest
-	4, // 2: account.AccountService.CheckAccountExists:input_type -> account.CheckAccountExistsRequest
-	1, // 3: account.AccountService.GetAccountBalance:output_type -> account.GetAccountBalanceResponse
-	3, // 4: account.AccountService.UpdateAccountBalance:output_type -> account.UpdateAccountBalanceResponse
-	5, // 5: account.AccountService.CheckAccountExists:output_type -> account.CheckAccountExistsResponse
+	0, // 0: accountProto.AccountService.GetAccountBalance:input_type -> accountProto.GetAccountBalanceRequest
+	2, // 1: accountProto.AccountService.UpdateAccountBalance:input_type -> accountProto.UpdateAccountBalanceRequest
+	4, // 2: accountProto.AccountService.CheckAccountExists:input_type -> accountProto.CheckAccountExistsRequest
+	1, // 3: accountProto.AccountService.GetAccountBalance:output_type -> accountProto.GetAccountBalanceResponse
+	3, // 4: accountProto.AccountService.UpdateAccountBalance:output_type -> accountProto.UpdateAccountBalanceResponse
+	5, // 5: accountProto.AccountService.CheckAccountExists:output_type -> accountProto.CheckAccountExistsResponse
 	3, // [3:6] is the sub-list for method output_type
 	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package account;
+package accountProto;
 
 // Go projelerinde paket import yolları için opsiyonel tanımlama
 option go_package = "./";

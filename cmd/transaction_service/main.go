@@ -5,6 +5,8 @@ import (
 	"interview_task_golang_microservices/pkgs/config"
 	"interview_task_golang_microservices/pkgs/logger"
 	rabbitmq "interview_task_golang_microservices/pkgs/rabbit_mq"
+	"interview_task_golang_microservices/pkgs/redis"
+	"interview_task_golang_microservices/pkgs/sql"
 )
 
 func main() {
@@ -16,16 +18,22 @@ func main() {
 		logger.Fatalf("Konfigürasyon yükleme hatası: %v", err)
 	}
 
-	rmq, err := rabbitmq.NewRabbitMQ(rabbitmq.Config{
-		URL:         cfg.RabbitMQ.URL,
-		DialTimeout: cfg.RabbitMQ.DialTimeout,
-	})
+	sql, err := sql.NewPostgresDB(cfg.Postgres)
+	if err != nil {
+		logger.Fatalf("Postgres DB bağlantı hatası: %v", err)
+	}
+
+	redis, err := redis.NewRedisClient(cfg.Redis)
+	if err != nil {
+		logger.Fatalf("Redis bağlantı hatası: %v", err)
+	}
+
+	rmq, err := rabbitmq.NewRabbitMQ(cfg.RabbitMQ)
 	if err != nil {
 		logger.Fatalf("RabbitMQ bağlantı hatası: %v", err)
 	}
-	defer rmq.Close()
 
-	srv := server.NewServer(cfg, logger, rmq)
+	srv := server.NewServer(cfg, logger, rmq, sql, redis)
 	if err := srv.Run(); err != nil {
 		logger.Fatalf("Transaction Service çalıştırılamadı: %v", err)
 	}

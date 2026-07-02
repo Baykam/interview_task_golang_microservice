@@ -16,10 +16,12 @@ redis:
 rabbitmq:
   url: "amqp://guest:guest@localhost:5672/"
   dial_timeout: "5s"
+  initQueues: false
 
 account_service:
+  http_port: "10045"
   grpc:
-    port: 50051
+    port: "50051"
     timeout: "5s"
   clients:
     transaction_service_addr: "localhost:50052"
@@ -30,12 +32,11 @@ account_service:
 
 transaction_service:
   grpc:
-    port: 50052
+    port: "50052"
     timeout: "5s"
   clients:
     account_service_addr: "localhost:50051"
   queues:
-    listen_queues:
-      - "account-deposit"
-      - "account-withdraw"
-      - "account-transfer"
+    deposit_queue: "account-deposit"
+    withdraw_queue: "account-withdraw"
+    transfer_queue: "account-transfer"

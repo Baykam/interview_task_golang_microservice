@@ -4,10 +4,11 @@
 // - protoc             v7.34.1
 // source: account.proto
 
-package __
+package accountProto
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,9 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AccountService_GetAccountBalance_FullMethodName    = "/account.AccountService/GetAccountBalance"
-	AccountService_UpdateAccountBalance_FullMethodName = "/account.AccountService/UpdateAccountBalance"
-	AccountService_CheckAccountExists_FullMethodName   = "/account.AccountService/CheckAccountExists"
+	AccountService_GetAccountBalance_FullMethodName    = "/accountProto.AccountService/GetAccountBalance"
+	AccountService_UpdateAccountBalance_FullMethodName = "/accountProto.AccountService/UpdateAccountBalance"
+	AccountService_CheckAccountExists_FullMethodName   = "/accountProto.AccountService/CheckAccountExists"
 )
 
 // AccountServiceClient is the client API for AccountService service.
@@ -188,7 +189,7 @@ func _AccountService_CheckAccountExists_Handler(srv interface{}, ctx context.Con
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AccountService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "account.AccountService",
+	ServiceName: "accountProto.AccountService",
 	HandlerType: (*AccountServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

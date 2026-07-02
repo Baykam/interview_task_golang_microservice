@@ -13,9 +13,9 @@ func (s *server) close(ctx context.Context, httpServer *http.Server) {
 		s.logger.Debug("HTTP Sunucu kapatılırken hata oluştu: %v", err)
 	}
 
-	s.rmq.Close() // RabbitMQ Kanalını ve Bağlantısını Kapat
-	s.rdb.Close() // Redis İstemci Havuzunu Kapat
-	s.db.Close()  // PostgreSQL Havuzunu Kapat
+	s.rmq.Close()
+	s.rdb.Close()
+	s.db.Close()
 
 	s.logger.Debug("Tüm bağlantılar ve havuzlar temizlendi. Uygulama güvenli bir şekilde sonlandırıldı (Safe Exit).")
 

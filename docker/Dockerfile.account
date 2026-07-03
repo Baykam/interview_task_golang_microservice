@@ -1,0 +1,32 @@
+# 1. Aşama: Derleme (Builder) - Doğrudan resmi ve güncel Go 1.25 imajını kullanıyoruz
+FROM golang:1.25-alpine AS builder
+
+# Alpine üzerinde bazı Go paketlerinin (gcompat vb.) düzgün çalışması için gerekli temel kütüphane
+RUN apk add --no-cache gcompat
+
+WORKDIR /app
+
+# Bağımlılıkları kopyala ve indir
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Tüm kaynak kodunu kopyala
+COPY . .
+
+# Uygulamayı derle (-o hedef yolunu sizin orijinal yapınıza göre güncelledim)
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/account_service ./cmd/account_service/main.go
+
+# 2. Aşama: Çalıştırma (Runtime) - Hafif ve güvenli alpine:3.18
+FROM alpine:3.18
+
+RUN apk add --no-cache ca-certificates tzdata
+WORKDIR /app
+
+# Derlenen binary dosyasını ve config dosyasını kopyala
+COPY --from=builder /app/account_service .
+COPY pkgs/config/config.yaml ./config.yaml
+
+# Orijinal portlarınız
+EXPOSE 8080 50051
+
+CMD ["./account_service"]

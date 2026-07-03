@@ -1,3 +1,4 @@
+DROP INDEX IF EXISTS idx_transactions_to_account_id;
 DROP INDEX IF EXISTS idx_transactions_account_id;
 DROP INDEX IF EXISTS idx_accounts_deleted_at;
 

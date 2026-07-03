@@ -2,6 +2,7 @@ package transActionHandler
 
 import (
 	"encoding/json"
+	"interview_task_golang_microservices/dto"
 	"interview_task_golang_microservices/models"
 	rabbitmq "interview_task_golang_microservices/pkgs/rabbit_mq"
 	"net/http"
@@ -25,13 +26,15 @@ func (h *handler) Withdraw(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, err := json.Marshal(req)
-	if err != nil {
+	req.AccountId = &id
+
+	body := dto.TransActionToByte(req)
+	if body == nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
-	err = h.publisher.PublishMessage(r.Context(), rabbitmq.Message{
+	err := h.publisher.PublishMessage(r.Context(), rabbitmq.Message{
 		QueueName: h.cfg.TransactionService.Queues.WithdrawQueue,
 		Body:      body,
 	})

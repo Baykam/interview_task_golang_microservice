@@ -14,12 +14,15 @@ CREATE TABLE IF NOT EXISTS accounts (
 CREATE TABLE IF NOT EXISTS transactions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     account_id UUID NOT NULL,
+    to_account_id UUID,
     amount BIGINT NOT NULL DEFAULT 0,                         
     transaction_type VARCHAR(20) NOT NULL,          
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 
-    CONSTRAINT fk_account FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+    CONSTRAINT fk_account FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE,
+    CONSTRAINT fk_to_account FOREIGN KEY (to_account_id) REFERENCES accounts(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_accounts_active_user ON accounts(user_id) WHERE deleted_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_transactions_account_id ON transactions(account_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_to_account_id ON transactions(to_account_id) WHERE to_account_id IS NOT NULL;

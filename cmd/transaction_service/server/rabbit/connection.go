@@ -111,7 +111,6 @@ func (t *transactionMessageProcessor) handleMessageByQueue(ctx context.Context, 
 	var err error
 	var txType models.TransactionType
 
-	// 1. Kuyruk ismine göre işlem tipini otomatik belirliyoruz
 	switch queueName {
 	case t.cfg.TransactionService.Queues.DepositQueue:
 		txType = models.TransactionTypeDeposit

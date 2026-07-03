@@ -25,7 +25,7 @@ func (h *handler) Transfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req.TransactionType = models.TransactionTypeTransfer
+	req.AccountId = &id
 
 	body := dto.TransActionToByte(req)
 	if body == nil {

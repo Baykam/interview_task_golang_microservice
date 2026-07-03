@@ -1,12 +1,12 @@
 database:
-  dsn: "postgres://myuser:mypass@postgres_db:5432/mydb?sslmode=disable"
+  dsn: "postgres://myuser:mypass@localhost:5432/mydb?sslmode=disable"
   max_open_conns: 25
   max_idle_conns: 25
   conn_max_lifetime: "5m"
   conn_max_idle_time: "2m"
 
 redis:
-  addr: "go_redis:6379"
+  addr: "localhost:6379"
   password: "gizli_sifre"
   db: 0
   pool_size: 20
@@ -14,17 +14,17 @@ redis:
   dial_timeout: "5s"
 
 rabbitmq:
-  url: "amqp://guest:guest@go_rabbitmq:5672/"
+  url: "amqp://guest:guest@localhost:5672/"
   dial_timeout: "5s"
   initQueues: false
 
 account_service:
-  http_port: "8080" 
+  http_port: "10045"
   grpc:
     port: "50051"
     timeout: "5s"
   clients:
-    transaction_service_addr: "transaction_service:50052"
+    transaction_service_addr: "localhost:50052"
   queues:
     deposit_queue: "account-deposit"
     withdraw_queue: "account-withdraw"
@@ -35,7 +35,7 @@ transaction_service:
     port: "50052"
     timeout: "5s"
   clients:
-    account_service_addr: "account_service:50051"
+    account_service_addr: "localhost:50051"
   queues:
     deposit_queue: "account-deposit"
     withdraw_queue: "account-withdraw"

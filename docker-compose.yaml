@@ -26,7 +26,7 @@ services:
     image: migrate/migrate
     container_name: bank_migration
     volumes:
-      - ./migration:/migrations
+      - ./migrations:/migrations
     command:
       - -path=/migrations
       - -database=postgres://myuser:mypass@postgres_db:5432/mydb?sslmode=disable
@@ -75,41 +75,43 @@ services:
       retries: 5
 
   # 5. HESAP SERVİSİ - ACCOUNT SERVICE
-  # account_service:
-  #   build:
-  #     context: ./account-service
-  #     dockerfile: Dockerfile
-  #   container_name: account_service
-  #   ports:
-  #     - "8080:8080"   # REST API Portu
-  #     - "50051:50051" # gRPC Server Portu
-  #   environment:
-  #     - CONFIG_PATH=/app/config.yaml
-  #   networks:
-  #     - go_network
-  #   depends_on:
-  #     postgres_db:
-  #       condition: service_healthy
-  #     redis_cache:
-  #       condition: service_healthy
-  #     db_migration:
-  #       condition: service_completed_successfully # Migration başarıyla bittikten sonra çalıştır
+  account_service:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.account
+    container_name: account_service
+    ports:
+      - "8080:8080"   # REST API Portu
+      - "50051:50051" # gRPC Server Portu
+    environment:
+      - CONFIG_PATH=/app/config.yaml
+    networks:
+      - go_network
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+      redis_cache:
+        condition: service_healthy
+      db_migration:
+        condition: service_completed_successfully
 
   # 6. TRANSAKSİYON SERVİSİ - TRANSACTION SERVICE
-  # transaction_service:
-  #   build:
-  #     context: ./transaction-service
-  #     dockerfile: Dockerfile
-  #   container_name: transaction_service
-  #   environment:
-  #     - CONFIG_PATH=/app/config.yaml
-  #   networks:
-  #     - go_network
-  #   depends_on:
-  #     rabbitmq_broker:
-  #       condition: service_healthy
-  #     account_service:
-  #       condition: service_started
+  transaction_service:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.transaction
+    container_name: transaction_service
+    ports:
+      - "50052:50052" # gRPC Server veya Alternatif Port
+    environment:
+      - CONFIG_PATH=/app/config.yaml
+    networks:
+      - go_network
+    depends_on:
+      rabbitmq_broker:
+        condition: service_healthy
+      account_service:
+        condition: service_started
 
 volumes:
   postgres_data:

@@ -26,6 +26,8 @@ func (h *handler) Deposit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	req.AccountId = &id
+
 	body := dto.TransActionToByte(req)
 	if body == nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -33,7 +35,7 @@ func (h *handler) Deposit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := h.publisher.PublishMessage(r.Context(), rabbitmq.Message{
-		QueueName: h.cfg.TransactionService.Queues.WithdrawQueue,
+		QueueName: h.cfg.TransactionService.Queues.DepositQueue,
 		Body:      body,
 	})
 	if err != nil {

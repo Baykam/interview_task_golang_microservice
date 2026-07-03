@@ -34,7 +34,7 @@ type server struct {
 }
 
 func NewServer(cfg *config.Config, logger logger.Logger, rmq *rabbitmq.RabbitMQ, sql *sqlx.DB, redis *redis.Client) Server {
-	return &server{cfg: cfg, logger: logger, rmq: rmq}
+	return &server{cfg: cfg, logger: logger, rmq: rmq, sql: sql, redis: redis}
 }
 
 func (s *server) Run() error {

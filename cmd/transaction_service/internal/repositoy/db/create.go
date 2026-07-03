@@ -14,6 +14,13 @@ func (d *db) Create(ctx context.Context, data models.Transaction) (*string, erro
 		return nil, fmt.Errorf("transaction type '%s' is not supported", data.TransactionType)
 	}
 
+	if d.db == nil {
+		d.logger.Error("KRİTİK HATA: sqlx.DB nesnesi NIL!")
+		return nil, errors.New("database connection is nil")
+	}
+
+	d.logger.Info("Transaction başlatılıyor...")
+
 	tx, err := d.db.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to begin transaction: %w", err)

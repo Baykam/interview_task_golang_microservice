@@ -7,7 +7,6 @@ import (
 )
 
 func (r *repository) Create(ctx context.Context, account *models.Account) (*models.Account, error) {
-	// 1. İş kurallarına göre varsayılan değer pointer atamaları
 	if account.Balance == nil {
 		defaultBalance := int64(0)
 		account.Balance = &defaultBalance

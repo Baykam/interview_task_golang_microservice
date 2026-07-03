@@ -21,7 +21,6 @@ func (s *server) httpConnect() *http.Server {
 }
 
 func (s *server) registerRoutes() {
-
 	apiMux := http.NewServeMux()
 
 	s.accountRoutes(apiMux)
@@ -30,18 +29,17 @@ func (s *server) registerRoutes() {
 }
 
 func (s *server) accountRoutes(apiMux *http.ServeMux) {
-
 	accountMux := http.NewServeMux()
 
-	accountMux.HandleFunc("POST /api/accounts", s.httpHandler.Account.CreateAccount)
-	accountMux.HandleFunc("GET /api/accounts", s.httpHandler.Account.GetAccountsList)
-	accountMux.HandleFunc("GET /api/accounts/{id}", s.httpHandler.Account.GetAccountById)
-	accountMux.HandleFunc("DELETE /api/accounts/{id}", s.httpHandler.Account.DeleteAccount)
+	accountMux.HandleFunc("POST /", s.httpHandler.Account.CreateAccount)
+	accountMux.HandleFunc("GET /", s.httpHandler.Account.GetAccountsList)
+	accountMux.HandleFunc("GET /{id}", s.httpHandler.Account.GetAccountById)
+	accountMux.HandleFunc("DELETE /{id}", s.httpHandler.Account.DeleteAccount)
 
-	accountMux.HandleFunc("POST /api/accounts/{id}/deposit", s.httpHandler.Transaction.Deposit)
-	accountMux.HandleFunc("POST /api/accounts/{id}/withdraw", s.httpHandler.Transaction.Withdraw)
-	accountMux.HandleFunc("POST /api/accounts/{id}/transfer", s.httpHandler.Transaction.Transfer)
-	accountMux.HandleFunc("GET /api/accounts/{id}/transactions", s.httpHandler.Transaction.GetTransactionHistory)
+	accountMux.HandleFunc("POST /{id}/deposit", s.httpHandler.Transaction.Deposit)
+	accountMux.HandleFunc("POST /{id}/withdraw", s.httpHandler.Transaction.Withdraw)
+	accountMux.HandleFunc("POST /{id}/transfer", s.httpHandler.Transaction.Transfer)
+	accountMux.HandleFunc("GET /{id}/transactions", s.httpHandler.Transaction.GetTransactionHistory)
 
-	apiMux.Handle("/api/", http.StripPrefix("/api", accountMux))
+	apiMux.Handle("/accounts/", http.StripPrefix("/accounts", accountMux))
 }

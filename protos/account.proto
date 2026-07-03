@@ -16,6 +16,9 @@ service AccountService {
 
   // Hesabın sistemde var olup olmadığını doğrular.
   rpc CheckAccountExists (CheckAccountExistsRequest) returns (CheckAccountExistsResponse);
+
+  // Hesaba ait tüm işlem geçmişini (Transaction History) listeler.
+  rpc GetTransactionHistory (GetTransactionHistoryRequest) returns (GetTransactionHistoryResponse);
 }
 
 // --- İstek ve Yanıt Mesajları ---
@@ -48,4 +51,23 @@ message CheckAccountExistsRequest {
 
 message CheckAccountExistsResponse {
   bool exists = 1;
+}
+
+// --- İşlem Geçmişi (Transaction History) İçin Eklenen Mesajlar ---
+
+message GetTransactionHistoryRequest {
+  string account_id = 1;      // Geçmişi sorgulanan hesap ID'si
+}
+
+message TransactionMessage {
+  string id = 1;               // İşlemin benzersiz ID'si
+  string account_id = 2;       // İşlemi başlatan ana hesap ID'si
+  string to_account_id = 3;    // Transfer durumunda hedef hesap ID'si (boş kalabilir)
+  int64 amount = 4;            // İşlem tutarı (Kuruş/Cent cinsinden int64)
+  string transaction_type = 5; // "deposit", "withdraw", "transfer"
+  string created_at = 6;       // İşlem tarihi (Örn: RFC3339 string formatında)
+}
+
+message GetTransactionHistoryResponse {
+  repeated TransactionMessage transactions = 1; // İşlem geçmişi listesi
 }

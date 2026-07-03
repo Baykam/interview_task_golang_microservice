@@ -12,6 +12,7 @@ type Service interface {
 	GetAccountBalance(ctx context.Context, in *accountProto.GetAccountBalanceRequest) (*accountProto.GetAccountBalanceResponse, error)
 	UpdateAccountBalance(ctx context.Context, in *accountProto.UpdateAccountBalanceRequest) (*accountProto.UpdateAccountBalanceResponse, error)
 	CheckAccountExists(ctx context.Context, in *accountProto.CheckAccountExistsRequest) (*accountProto.CheckAccountExistsResponse, error)
+	GetTransactionHistory(ctx context.Context, in *accountProto.GetTransactionHistoryRequest) (*accountProto.GetTransactionHistoryResponse, error)
 }
 
 type service struct {

@@ -2,6 +2,7 @@ package accountRepositoryDb
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"interview_task_golang_microservices/models"
 	"time"
@@ -13,7 +14,10 @@ func (r *repository) Delete(ctx context.Context, account *models.Account) error 
 	}
 
 	now := time.Now()
-	account.DeletedAt = &now
+	account.DeletedAt = sql.NullTime{
+		Time:  now,
+		Valid: true,
+	}
 
 	query := `
 		UPDATE accounts 

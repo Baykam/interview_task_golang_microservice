@@ -4,16 +4,10 @@ import (
 	"context"
 	"fmt"
 	"interview_task_golang_microservices/models"
-	"time"
 )
 
-func (r *repository) Create(ctx context.Context, account *models.Account) error {
-
-	now := time.Now()
-	if account.CreatedAt == nil {
-		account.CreatedAt = &now
-	}
-
+func (r *repository) Create(ctx context.Context, account *models.Account) (*models.Account, error) {
+	// 1. İş kurallarına göre varsayılan değer pointer atamaları
 	if account.Balance == nil {
 		defaultBalance := int64(0)
 		account.Balance = &defaultBalance
@@ -25,14 +19,30 @@ func (r *repository) Create(ctx context.Context, account *models.Account) error 
 	}
 
 	query := `
-		INSERT INTO accounts (id, user_id, balance, currency, is_locked, created_at, deleted_at)
-		VALUES (:id, :user_id, :balance, :currency, :is_locked, :created_at, :deleted_at)
-	`
-	_, err := r.db.NamedExecContext(ctx, query, account)
+        INSERT INTO accounts (user_id, balance, currency, is_locked)
+        VALUES (:user_id, :balance, :currency, :is_locked)
+        RETURNING id, user_id, balance, currency, is_locked, created_at
+    `
+
+	rows, err := r.db.NamedQueryContext(ctx, query, account)
 	if err != nil {
 		r.log.Error("failed to insert account for user %v: %v", account.UserID, err)
-		return fmt.Errorf("failed to create account: %w", err)
+		return nil, fmt.Errorf("failed to create account: %w", err)
+	}
+	defer rows.Close()
+
+	var insertedAccount models.Account
+
+	if rows.Next() {
+		if err := rows.StructScan(&insertedAccount); err != nil {
+			r.log.Error("failed to scan inserted account for user %v: %v", account.UserID, err)
+			return nil, fmt.Errorf("failed to scan inserted account: %w", err)
+		}
 	}
 
-	return nil
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return &insertedAccount, nil
 }

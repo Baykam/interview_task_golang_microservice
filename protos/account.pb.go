@@ -334,6 +334,178 @@ func (x *CheckAccountExistsResponse) GetExists() bool {
 	return false
 }
 
+type GetTransactionHistoryRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AccountId     string                 `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"` // Geçmişi sorgulanan hesap ID'si
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTransactionHistoryRequest) Reset() {
+	*x = GetTransactionHistoryRequest{}
+	mi := &file_account_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTransactionHistoryRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTransactionHistoryRequest) ProtoMessage() {}
+
+func (x *GetTransactionHistoryRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTransactionHistoryRequest.ProtoReflect.Descriptor instead.
+func (*GetTransactionHistoryRequest) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetTransactionHistoryRequest) GetAccountId() string {
+	if x != nil {
+		return x.AccountId
+	}
+	return ""
+}
+
+type TransactionMessage struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Id              string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                  // İşlemin benzersiz ID'si
+	AccountId       string                 `protobuf:"bytes,2,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`                   // İşlemi başlatan ana hesap ID'si
+	ToAccountId     string                 `protobuf:"bytes,3,opt,name=to_account_id,json=toAccountId,proto3" json:"to_account_id,omitempty"`           // Transfer durumunda hedef hesap ID'si (boş kalabilir)
+	Amount          int64                  `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"`                                         // İşlem tutarı (Kuruş/Cent cinsinden int64)
+	TransactionType string                 `protobuf:"bytes,5,opt,name=transaction_type,json=transactionType,proto3" json:"transaction_type,omitempty"` // "deposit", "withdraw", "transfer"
+	CreatedAt       string                 `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                   // İşlem tarihi (Örn: RFC3339 string formatında)
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *TransactionMessage) Reset() {
+	*x = TransactionMessage{}
+	mi := &file_account_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TransactionMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TransactionMessage) ProtoMessage() {}
+
+func (x *TransactionMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TransactionMessage.ProtoReflect.Descriptor instead.
+func (*TransactionMessage) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *TransactionMessage) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *TransactionMessage) GetAccountId() string {
+	if x != nil {
+		return x.AccountId
+	}
+	return ""
+}
+
+func (x *TransactionMessage) GetToAccountId() string {
+	if x != nil {
+		return x.ToAccountId
+	}
+	return ""
+}
+
+func (x *TransactionMessage) GetAmount() int64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *TransactionMessage) GetTransactionType() string {
+	if x != nil {
+		return x.TransactionType
+	}
+	return ""
+}
+
+func (x *TransactionMessage) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+type GetTransactionHistoryResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Transactions  []*TransactionMessage  `protobuf:"bytes,1,rep,name=transactions,proto3" json:"transactions,omitempty"` // İşlem geçmişi listesi
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTransactionHistoryResponse) Reset() {
+	*x = GetTransactionHistoryResponse{}
+	mi := &file_account_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTransactionHistoryResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTransactionHistoryResponse) ProtoMessage() {}
+
+func (x *GetTransactionHistoryResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTransactionHistoryResponse.ProtoReflect.Descriptor instead.
+func (*GetTransactionHistoryResponse) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *GetTransactionHistoryResponse) GetTransactions() []*TransactionMessage {
+	if x != nil {
+		return x.Transactions
+	}
+	return nil
+}
+
 var File_account_proto protoreflect.FileDescriptor
 
 const file_account_proto_rawDesc = "" +
@@ -361,11 +533,26 @@ const file_account_proto_rawDesc = "" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\"4\n" +
 	"\x1aCheckAccountExistsResponse\x12\x16\n" +
-	"\x06exists\x18\x01 \x01(\bR\x06exists2\xce\x02\n" +
+	"\x06exists\x18\x01 \x01(\bR\x06exists\"=\n" +
+	"\x1cGetTransactionHistoryRequest\x12\x1d\n" +
+	"\n" +
+	"account_id\x18\x01 \x01(\tR\taccountId\"\xc9\x01\n" +
+	"\x12TransactionMessage\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
+	"\n" +
+	"account_id\x18\x02 \x01(\tR\taccountId\x12\"\n" +
+	"\rto_account_id\x18\x03 \x01(\tR\vtoAccountId\x12\x16\n" +
+	"\x06amount\x18\x04 \x01(\x03R\x06amount\x12)\n" +
+	"\x10transaction_type\x18\x05 \x01(\tR\x0ftransactionType\x12\x1d\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\tR\tcreatedAt\"e\n" +
+	"\x1dGetTransactionHistoryResponse\x12D\n" +
+	"\ftransactions\x18\x01 \x03(\v2 .accountProto.TransactionMessageR\ftransactions2\xc0\x03\n" +
 	"\x0eAccountService\x12d\n" +
 	"\x11GetAccountBalance\x12&.accountProto.GetAccountBalanceRequest\x1a'.accountProto.GetAccountBalanceResponse\x12m\n" +
 	"\x14UpdateAccountBalance\x12).accountProto.UpdateAccountBalanceRequest\x1a*.accountProto.UpdateAccountBalanceResponse\x12g\n" +
-	"\x12CheckAccountExists\x12'.accountProto.CheckAccountExistsRequest\x1a(.accountProto.CheckAccountExistsResponseB\x04Z\x02./b\x06proto3"
+	"\x12CheckAccountExists\x12'.accountProto.CheckAccountExistsRequest\x1a(.accountProto.CheckAccountExistsResponse\x12p\n" +
+	"\x15GetTransactionHistory\x12*.accountProto.GetTransactionHistoryRequest\x1a+.accountProto.GetTransactionHistoryResponseB\x04Z\x02./b\x06proto3"
 
 var (
 	file_account_proto_rawDescOnce sync.Once
@@ -379,27 +566,33 @@ func file_account_proto_rawDescGZIP() []byte {
 	return file_account_proto_rawDescData
 }
 
-var file_account_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_account_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_account_proto_goTypes = []any{
-	(*GetAccountBalanceRequest)(nil),     // 0: accountProto.GetAccountBalanceRequest
-	(*GetAccountBalanceResponse)(nil),    // 1: accountProto.GetAccountBalanceResponse
-	(*UpdateAccountBalanceRequest)(nil),  // 2: accountProto.UpdateAccountBalanceRequest
-	(*UpdateAccountBalanceResponse)(nil), // 3: accountProto.UpdateAccountBalanceResponse
-	(*CheckAccountExistsRequest)(nil),    // 4: accountProto.CheckAccountExistsRequest
-	(*CheckAccountExistsResponse)(nil),   // 5: accountProto.CheckAccountExistsResponse
+	(*GetAccountBalanceRequest)(nil),      // 0: accountProto.GetAccountBalanceRequest
+	(*GetAccountBalanceResponse)(nil),     // 1: accountProto.GetAccountBalanceResponse
+	(*UpdateAccountBalanceRequest)(nil),   // 2: accountProto.UpdateAccountBalanceRequest
+	(*UpdateAccountBalanceResponse)(nil),  // 3: accountProto.UpdateAccountBalanceResponse
+	(*CheckAccountExistsRequest)(nil),     // 4: accountProto.CheckAccountExistsRequest
+	(*CheckAccountExistsResponse)(nil),    // 5: accountProto.CheckAccountExistsResponse
+	(*GetTransactionHistoryRequest)(nil),  // 6: accountProto.GetTransactionHistoryRequest
+	(*TransactionMessage)(nil),            // 7: accountProto.TransactionMessage
+	(*GetTransactionHistoryResponse)(nil), // 8: accountProto.GetTransactionHistoryResponse
 }
 var file_account_proto_depIdxs = []int32{
-	0, // 0: accountProto.AccountService.GetAccountBalance:input_type -> accountProto.GetAccountBalanceRequest
-	2, // 1: accountProto.AccountService.UpdateAccountBalance:input_type -> accountProto.UpdateAccountBalanceRequest
-	4, // 2: accountProto.AccountService.CheckAccountExists:input_type -> accountProto.CheckAccountExistsRequest
-	1, // 3: accountProto.AccountService.GetAccountBalance:output_type -> accountProto.GetAccountBalanceResponse
-	3, // 4: accountProto.AccountService.UpdateAccountBalance:output_type -> accountProto.UpdateAccountBalanceResponse
-	5, // 5: accountProto.AccountService.CheckAccountExists:output_type -> accountProto.CheckAccountExistsResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	7, // 0: accountProto.GetTransactionHistoryResponse.transactions:type_name -> accountProto.TransactionMessage
+	0, // 1: accountProto.AccountService.GetAccountBalance:input_type -> accountProto.GetAccountBalanceRequest
+	2, // 2: accountProto.AccountService.UpdateAccountBalance:input_type -> accountProto.UpdateAccountBalanceRequest
+	4, // 3: accountProto.AccountService.CheckAccountExists:input_type -> accountProto.CheckAccountExistsRequest
+	6, // 4: accountProto.AccountService.GetTransactionHistory:input_type -> accountProto.GetTransactionHistoryRequest
+	1, // 5: accountProto.AccountService.GetAccountBalance:output_type -> accountProto.GetAccountBalanceResponse
+	3, // 6: accountProto.AccountService.UpdateAccountBalance:output_type -> accountProto.UpdateAccountBalanceResponse
+	5, // 7: accountProto.AccountService.CheckAccountExists:output_type -> accountProto.CheckAccountExistsResponse
+	8, // 8: accountProto.AccountService.GetTransactionHistory:output_type -> accountProto.GetTransactionHistoryResponse
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_account_proto_init() }
@@ -413,7 +606,7 @@ func file_account_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_proto_rawDesc), len(file_account_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

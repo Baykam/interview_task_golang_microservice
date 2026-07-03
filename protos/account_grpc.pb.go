@@ -20,9 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AccountService_GetAccountBalance_FullMethodName    = "/accountProto.AccountService/GetAccountBalance"
-	AccountService_UpdateAccountBalance_FullMethodName = "/accountProto.AccountService/UpdateAccountBalance"
-	AccountService_CheckAccountExists_FullMethodName   = "/accountProto.AccountService/CheckAccountExists"
+	AccountService_GetAccountBalance_FullMethodName     = "/accountProto.AccountService/GetAccountBalance"
+	AccountService_UpdateAccountBalance_FullMethodName  = "/accountProto.AccountService/UpdateAccountBalance"
+	AccountService_CheckAccountExists_FullMethodName    = "/accountProto.AccountService/CheckAccountExists"
+	AccountService_GetTransactionHistory_FullMethodName = "/accountProto.AccountService/GetTransactionHistory"
 )
 
 // AccountServiceClient is the client API for AccountService service.
@@ -38,6 +39,8 @@ type AccountServiceClient interface {
 	UpdateAccountBalance(ctx context.Context, in *UpdateAccountBalanceRequest, opts ...grpc.CallOption) (*UpdateAccountBalanceResponse, error)
 	// Hesabın sistemde var olup olmadığını doğrular.
 	CheckAccountExists(ctx context.Context, in *CheckAccountExistsRequest, opts ...grpc.CallOption) (*CheckAccountExistsResponse, error)
+	// Hesaba ait tüm işlem geçmişini (Transaction History) listeler.
+	GetTransactionHistory(ctx context.Context, in *GetTransactionHistoryRequest, opts ...grpc.CallOption) (*GetTransactionHistoryResponse, error)
 }
 
 type accountServiceClient struct {
@@ -78,6 +81,16 @@ func (c *accountServiceClient) CheckAccountExists(ctx context.Context, in *Check
 	return out, nil
 }
 
+func (c *accountServiceClient) GetTransactionHistory(ctx context.Context, in *GetTransactionHistoryRequest, opts ...grpc.CallOption) (*GetTransactionHistoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTransactionHistoryResponse)
+	err := c.cc.Invoke(ctx, AccountService_GetTransactionHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServiceServer is the server API for AccountService service.
 // All implementations must embed UnimplementedAccountServiceServer
 // for forward compatibility.
@@ -91,6 +104,8 @@ type AccountServiceServer interface {
 	UpdateAccountBalance(context.Context, *UpdateAccountBalanceRequest) (*UpdateAccountBalanceResponse, error)
 	// Hesabın sistemde var olup olmadığını doğrular.
 	CheckAccountExists(context.Context, *CheckAccountExistsRequest) (*CheckAccountExistsResponse, error)
+	// Hesaba ait tüm işlem geçmişini (Transaction History) listeler.
+	GetTransactionHistory(context.Context, *GetTransactionHistoryRequest) (*GetTransactionHistoryResponse, error)
 	mustEmbedUnimplementedAccountServiceServer()
 }
 
@@ -109,6 +124,9 @@ func (UnimplementedAccountServiceServer) UpdateAccountBalance(context.Context, *
 }
 func (UnimplementedAccountServiceServer) CheckAccountExists(context.Context, *CheckAccountExistsRequest) (*CheckAccountExistsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CheckAccountExists not implemented")
+}
+func (UnimplementedAccountServiceServer) GetTransactionHistory(context.Context, *GetTransactionHistoryRequest) (*GetTransactionHistoryResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTransactionHistory not implemented")
 }
 func (UnimplementedAccountServiceServer) mustEmbedUnimplementedAccountServiceServer() {}
 func (UnimplementedAccountServiceServer) testEmbeddedByValue()                        {}
@@ -185,6 +203,24 @@ func _AccountService_CheckAccountExists_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountService_GetTransactionHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTransactionHistoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).GetTransactionHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_GetTransactionHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).GetTransactionHistory(ctx, req.(*GetTransactionHistoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountService_ServiceDesc is the grpc.ServiceDesc for AccountService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -203,6 +239,10 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckAccountExists",
 			Handler:    _AccountService_CheckAccountExists_Handler,
+		},
+		{
+			MethodName: "GetTransactionHistory",
+			Handler:    _AccountService_GetTransactionHistory_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

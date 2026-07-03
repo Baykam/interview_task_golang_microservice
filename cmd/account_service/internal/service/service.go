@@ -11,7 +11,7 @@ import (
 )
 
 type Service interface {
-	CreateAccount(ctx context.Context, account *models.Account) error
+	CreateAccount(ctx context.Context, account *models.Account) (*models.Account, error)
 	DeleteAccount(ctx context.Context, id string) error
 	GetAccount(ctx context.Context, id string) (*models.Account, error)
 	GetAccountsList(ctx context.Context) ([]models.Account, error)
@@ -30,5 +30,5 @@ func NewService(
 	rmq *rabbitmq.RabbitMQ,
 	log logger.Logger,
 ) Service {
-	return &service{accountRepo: repo, rdb: rdb, rmq: rmq}
+	return &service{accountRepo: repo, rdb: rdb, rmq: rmq, log: log}
 }

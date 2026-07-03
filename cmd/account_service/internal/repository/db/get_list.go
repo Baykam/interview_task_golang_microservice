@@ -10,7 +10,7 @@ func (r *repository) GetList(ctx context.Context) ([]models.Account, error) {
 	accounts := make([]models.Account, 0)
 
 	query := `
-		SELECT id, balance, currency, is_locked, created_at, deleted_at 
+		SELECT id, user_id, balance, currency, is_locked, created_at 
 		FROM accounts 
 		WHERE deleted_at IS NULL
 		ORDER BY created_at DESC

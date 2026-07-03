@@ -26,7 +26,8 @@ type cache struct {
 
 func NewCache(
 	log logger.Logger,
-	redis *redis.Client) Cache {
+	redis *redis.Client,
+) Cache {
 	return &cache{
 		log:   log,
 		redis: redis,

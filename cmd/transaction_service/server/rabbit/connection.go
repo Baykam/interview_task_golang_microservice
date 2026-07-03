@@ -2,10 +2,14 @@ package transactionConn
 
 import (
 	"context"
+	"fmt"
 	transActionService "interview_task_golang_microservices/cmd/transaction_service/internal/service"
+	"interview_task_golang_microservices/dto"
+	"interview_task_golang_microservices/models"
 	"interview_task_golang_microservices/pkgs/config"
 	"interview_task_golang_microservices/pkgs/logger"
 	rabbitmq "interview_task_golang_microservices/pkgs/rabbit_mq"
+	"strings"
 	"sync"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -103,31 +107,49 @@ func (t *transactionMessageProcessor) worker(ctx context.Context, rmq *rabbitmq.
 	}
 }
 
-// İş mantığını ayıran yardımcı fonksiyon
 func (t *transactionMessageProcessor) handleMessageByQueue(ctx context.Context, queueName string, message amqp.Delivery, workerId int) {
 	var err error
+	var txType models.TransactionType
 
+	// 1. Kuyruk ismine göre işlem tipini otomatik belirliyoruz
 	switch queueName {
 	case t.cfg.TransactionService.Queues.DepositQueue:
-		t.log.Info("Worker-%v [Deposit] mesajı aldı", "workerId", workerId)
-		// err = t.ts.HandleDeposit(ctx, message.Body)
-
+		txType = models.TransactionTypeDeposit
 	case t.cfg.TransactionService.Queues.WithdrawQueue:
-		t.log.Info("Worker-%v [Withdraw] mesajı aldı", "workerId", workerId)
-		// err = t.ts.HandleWithdraw(ctx, message.Body)
-
+		txType = models.TransactionTypeWithdraw
 	case t.cfg.TransactionService.Queues.TransferQueue:
-		t.log.Info("Worker-%v [Transfer] mesajı aldı", "workerId", workerId)
-		// err = t.ts.HandleTransfer(ctx, message.Body)
+		txType = models.TransactionTypeTransfer
+	default:
+		t.log.Error("Worker-%v: Unsupported queue name: %s", workerId, queueName)
+		message.Nack(false, false) // Kuyruktan tamamen at (requeue: false)
+		return
 	}
 
+	t.log.Info(fmt.Sprintf("Worker-%v [%s] message received", "workerId", workerId, "transActionType", txType))
+
+	txModel := dto.ByteToTransAction(message.Body)
+	if txModel == nil {
+		t.log.Error("Worker-%v: JSON unmarshal error: %v", workerId, err)
+		message.Nack(false, false)
+		return
+	}
+
+	txModel.TransactionType = txType
+
+	err = t.ts.Command.CreateTransAction(ctx, *txModel)
+
 	if err != nil {
-		t.log.Error("Worker-%v, Mesaj işleme hatası: %v", "workerId", workerId, "error", err)
-		// İsteğe bağlı: message.Nack(false, true) ile hata durumunda kuyruğa geri bırakılabilir
+		t.log.Error("Worker-%v, Transaction execution error: %v", "workerId", workerId, "error", err)
+
+		if strings.Contains(err.Error(), "insufficient balance") {
+			message.Nack(false, false)
+		} else {
+			message.Nack(false, true) // Hata sistemselse sıraya geri bırak
+		}
 		return
 	}
 
 	if err := message.Ack(false); err != nil {
-		t.log.Error("Worker-%v, ACK hatası: %v", workerId, err)
+		t.log.Error("Worker-%v, ACK error: %v", workerId, err)
 	}
 }

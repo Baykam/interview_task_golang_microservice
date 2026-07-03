@@ -18,8 +18,6 @@ func (h *handler) DeleteAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Servis katmanında Delete metodu olduğunu varsayarak çağırıyoruz
-	// (Hizmet katmanında hem DB'den soft delete yapmalı hem de Cache'den DEL etmeli)
 	if err := h.service.DeleteAccount(r.Context(), id); err != nil {
 		h.logger.Error("Handler error deleting account %s: %v", id, err)
 		h.respondWithError(w, http.StatusInternalServerError, "Failed to delete account")

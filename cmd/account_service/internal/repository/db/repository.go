@@ -9,7 +9,7 @@ import (
 )
 
 type Repository interface {
-	Create(ctx context.Context, account *models.Account) error
+	Create(ctx context.Context, account *models.Account) (*models.Account, error)
 	GetList(ctx context.Context) ([]models.Account, error)
 	GetById(ctx context.Context, id string) (*models.Account, error)
 	Delete(ctx context.Context, account *models.Account) error
@@ -22,7 +22,8 @@ type repository struct {
 
 func NewRepository(
 	db *sqlx.DB,
-	log logger.Logger) Repository {
+	log logger.Logger,
+) Repository {
 	return &repository{
 		db: db, log: log,
 	}
